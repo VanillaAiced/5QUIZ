@@ -153,158 +153,162 @@
     </div>
     
     <!-- Detailed Exam Analytics -->
-    <div class="card exam-table">
-        <div class="card-header bg-primary text-white">
-            <h5 class="mb-0">
-                <i class="fas fa-chart-line me-2"></i>
-                Detailed Exam Analytics
-            </h5>
-        </div>
-        <div class="card-body p-0">
-            {% if exam_analytics %}
-                <div class="table-responsive">
-                    <table class="table table-hover mb-0">
-                        <thead class="table-light">
-                            <tr>
-                                <th>Exam</th>
-                                <th>Attempts</th>
-                                <th>Pass/Fail</th>
-                                <th>Avg Score</th>
-                                <th>Time Analysis</th>
-                                <th>Most Difficult Questions</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for analytics in exam_analytics %}
-                            <tr>
-                                <!-- Exam Info -->
-                                <td>
-                                    <div class="fw-bold">{{ analytics.exam.title }}</div>
-                                    <small class="text-muted">
-                                        {{ analytics.total_questions }} questions • 
-                                        {{ analytics.exam.duration_minutes }} min
-                                    </small>
-                                </td>
-                                
-                                <!-- Attempts -->
-                                <td>
-                                    <span class="badge bg-secondary">{{ analytics.total_attempts }}</span>
-                                </td>
-                                
-                                <!-- Pass/Fail -->
-                                <td>
-                                    {% if analytics.total_attempts > 0 %}
-                                        <div class="mb-1">
-                                            <span class="badge bg-success">{{ analytics.passed_count }} passed</span>
-                                        </div>
-                                        <div class="mb-1">
-                                            <span class="badge bg-danger">{{ analytics.failed_count }} failed</span>
-                                        </div>
-                                        <div>
-                                            {% if analytics.pass_rate >= 80 %}
-                                                <span class="pass-rate-badge bg-success text-white">
-                                            {% elif analytics.pass_rate >= 60 %}
-                                                <span class="pass-rate-badge bg-warning text-dark">
-                                            {% else %}
-                                                <span class="pass-rate-badge bg-danger text-white">
-                                            {% endif %}
-                                                {{ analytics.pass_rate|floatformat:0 }}% pass rate
-                                            </span>
-                                        </div>
-                                    {% else %}
-                                        <span class="text-muted">No attempts yet</span>
-                                    {% endif %}
-                                </td>
-                                
-                                <!-- Average Score -->
-                                <td>
-                                    {% if analytics.total_attempts > 0 %}
-                                        <div class="fw-bold">{{ analytics.avg_score|floatformat:1 }}%</div>
-                                        {% if analytics.avg_score >= 80 %}
-                                            <small class="text-success">Excellent</small>
-                                        {% elif analytics.avg_score >= 60 %}
-                                            <small class="text-warning">Good</small>
-                                        {% else %}
-                                            <small class="text-danger">Needs Improvement</small>
-                                        {% endif %}
-                                    {% else %}
-                                        <span class="text-muted">-</span>
-                                    {% endif %}
-                                </td>
-                                
-                                <!-- Time Analysis -->
-                                <td>
-                                    {% if analytics.total_attempts > 0 %}
-                                        <div class="time-efficiency">
-                                            <small>{{ analytics.avg_time_minutes|floatformat:0 }}m / {{ analytics.allocated_time_minutes }}m</small>
-                                        </div>
-                                        <div class="time-efficiency mt-1">
-                                            <div class="time-bar">
-                                                <div class="time-fill {% if analytics.time_efficiency <= 50 %}bg-success{% elif analytics.time_efficiency <= 80 %}bg-warning{% else %}bg-danger{% endif %}" 
-                                                     style="width: {% if analytics.time_efficiency > 100 %}100{% else %}{{ analytics.time_efficiency|floatformat:0 }}{% endif %}%"></div>
-                                            </div>
-                                            <small class="text-muted">{{ analytics.time_efficiency|floatformat:0 }}%</small>
-                                        </div>
-                                    {% else %}
-                                        <span class="text-muted">-</span>
-                                    {% endif %}
-                                </td>
-                                
-                                <!-- Most Difficult Questions -->
-                                <td>
-                                    {% if analytics.question_difficulty %}
-                                        <div class="question-difficulty-list">
-                                            {% for q_diff in analytics.question_difficulty %}
-                                                <div class="question-item">
-                                                    <div class="d-flex justify-content-between align-items-center">
-                                                        <span class="text-truncate" style="max-width: 150px;" title="{{ q_diff.question.question_text }}">
-                                                            Q{{ forloop.counter }}: {{ q_diff.question.question_text|truncatechars:30 }}
-                                                        </span>
-                                                        <span class="difficulty-indicator 
-                                                            {% if q_diff.success_rate >= 70 %}difficulty-easy
-                                                            {% elif q_diff.success_rate >= 40 %}difficulty-medium
-                                                            {% else %}difficulty-hard{% endif %}">
-                                                            {{ q_diff.success_rate|floatformat:0 }}%
-                                                        </span>
-                                                    </div>
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card shadow">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0">
+                        <i class="fas fa-chart-line me-2"></i>
+                        Detailed Exam Analytics
+                    </h5>
+                </div>
+                <div class="card-body">
+                    {% if exam_analytics %}
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Exam</th>
+                                        <th>Attempts</th>
+                                        <th>Pass/Fail</th>
+                                        <th>Avg Score</th>
+                                        <th>Time Analysis</th>
+                                        <th>Most Difficult Questions</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for analytics in exam_analytics %}
+                                    <tr>
+                                        <!-- Exam Info -->
+                                        <td>
+                                            <div class="fw-bold">{{ analytics.exam.title }}</div>
+                                            <small class="text-muted">
+                                                {{ analytics.total_questions }} questions •
+                                                {{ analytics.exam.duration_minutes }} min
+                                            </small>
+                                        </td>
+
+                                        <!-- Attempts -->
+                                        <td>
+                                            <span class="badge bg-secondary">{{ analytics.total_attempts }}</span>
+                                        </td>
+
+                                        <!-- Pass/Fail -->
+                                        <td>
+                                            {% if analytics.total_attempts > 0 %}
+                                                <div class="mb-1">
+                                                    <span class="badge bg-success">{{ analytics.passed_count }} passed</span>
                                                 </div>
-                                            {% endfor %}
-                                        </div>
-                                    {% else %}
-                                        <span class="text-muted">No data</span>
-                                    {% endif %}
-                                </td>
-                                
-                                <!-- Actions -->
-                                <td>
-                                    <div class="btn-group-vertical btn-group-sm">
-                                        <a href="{% url 'exam:exam_detail' analytics.exam.pk %}" class="btn btn-outline-primary btn-sm">
-                                            <i class="fas fa-eye"></i>
-                                        </a>
-                                        <a href="{% url 'exam:edit_exam' analytics.exam.pk %}" class="btn btn-outline-secondary btn-sm">
-                                            <i class="fas fa-edit"></i>
-                                        </a>
-                                        <a href="{% url 'exam:manage_questions' analytics.exam.pk %}" class="btn btn-outline-info btn-sm">
-                                            <i class="fas fa-question-circle"></i>
-                                        </a>
-                                    </div>
-                                </td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
+                                                <div class="mb-1">
+                                                    <span class="badge bg-danger">{{ analytics.failed_count }} failed</span>
+                                                </div>
+                                                <div>
+                                                    {% if analytics.pass_rate >= 80 %}
+                                                        <span class="pass-rate-badge bg-success text-white">
+                                                    {% elif analytics.pass_rate >= 60 %}
+                                                        <span class="pass-rate-badge bg-warning text-dark">
+                                                    {% else %}
+                                                        <span class="pass-rate-badge bg-danger text-white">
+                                                    {% endif %}
+                                                        {{ analytics.pass_rate|floatformat:0 }}% pass rate
+                                                    </span>
+                                                </div>
+                                            {% else %}
+                                                <span class="text-muted">No attempts yet</span>
+                                            {% endif %}
+                                        </td>
+
+                                        <!-- Average Score -->
+                                        <td>
+                                            {% if analytics.total_attempts > 0 %}
+                                                <div class="fw-bold">{{ analytics.avg_score|floatformat:1 }}%</div>
+                                                {% if analytics.avg_score >= 80 %}
+                                                    <small class="text-success">Excellent</small>
+                                                {% elif analytics.avg_score >= 60 %}
+                                                    <small class="text-warning">Good</small>
+                                                {% else %}
+                                                    <small class="text-danger">Needs Improvement</small>
+                                                {% endif %}
+                                            {% else %}
+                                                <span class="text-muted">-</span>
+                                            {% endif %}
+                                        </td>
+
+                                        <!-- Time Analysis -->
+                                        <td>
+                                            {% if analytics.total_attempts > 0 %}
+                                                <div class="time-efficiency">
+                                                    <small>{{ analytics.avg_time_minutes|floatformat:0 }}m / {{ analytics.allocated_time_minutes }}m</small>
+                                                </div>
+                                                <div class="time-efficiency mt-1">
+                                                    <div class="time-bar">
+                                                        <div class="time-fill {% if analytics.time_efficiency <= 50 %}bg-success{% elif analytics.time_efficiency <= 80 %}bg-warning{% else %}bg-danger{% endif %}"
+                                                             style="width: {% if analytics.time_efficiency > 100 %}100{% else %}{{ analytics.time_efficiency|floatformat:0 }}{% endif %}%"></div>
+                                                    </div>
+                                                    <small class="text-muted">{{ analytics.time_efficiency|floatformat:0 }}%</small>
+                                                </div>
+                                            {% else %}
+                                                <span class="text-muted">-</span>
+                                            {% endif %}
+                                        </td>
+
+                                        <!-- Most Difficult Questions -->
+                                        <td>
+                                            {% if analytics.question_difficulty %}
+                                                <div class="question-difficulty-list">
+                                                    {% for q_diff in analytics.question_difficulty %}
+                                                        <div class="question-item">
+                                                            <div class="d-flex justify-content-between align-items-center">
+                                                                <span class="text-truncate" style="max-width: 150px;" title="{{ q_diff.question.question_text }}">
+                                                                    Q{{ forloop.counter }}: {{ q_diff.question.question_text|truncatechars:30 }}
+                                                                </span>
+                                                                <span class="difficulty-indicator
+                                                                    {% if q_diff.success_rate >= 70 %}difficulty-easy
+                                                                    {% elif q_diff.success_rate >= 40 %}difficulty-medium
+                                                                    {% else %}difficulty-hard{% endif %}">
+                                                                    {{ q_diff.success_rate|floatformat:0 }}%
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                    {% endfor %}
+                                                </div>
+                                            {% else %}
+                                                <span class="text-muted">No data</span>
+                                            {% endif %}
+                                        </td>
+
+                                        <!-- Actions -->
+                                        <td>
+                                            <div class="btn-group-vertical btn-group-sm">
+                                                <a href="{% url 'exam:exam_detail' analytics.exam.pk %}" class="btn btn-outline-primary btn-sm">
+                                                    <i class="fas fa-eye"></i>
+                                                </a>
+                                                <a href="{% url 'exam:edit_exam' analytics.exam.pk %}" class="btn btn-outline-secondary btn-sm">
+                                                    <i class="fas fa-edit"></i>
+                                                </a>
+                                                <a href="{% url 'exam:manage_questions' analytics.exam.pk %}" class="btn btn-outline-info btn-sm">
+                                                    <i class="fas fa-question-circle"></i>
+                                                </a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <div class="text-center py-4">
+                            <i class="fas fa-chart-line fa-3x text-muted mb-3"></i>
+                            <h5 class="text-muted">No Exams Created Yet</h5>
+                            <p class="text-muted">Create your first exam to see detailed analytics here.</p>
+                            <a href="{% url 'exam:create_exam' %}" class="btn btn-primary">
+                                <i class="fas fa-plus me-2"></i>Create Your First Exam
+                            </a>
+                        </div>
+                    {% endif %}
                 </div>
-            {% else %}
-                <div class="text-center py-5">
-                    <i class="fas fa-chart-line fa-3x text-muted mb-3"></i>
-                    <h5 class="text-muted">No Exams Created Yet</h5>
-                    <p class="text-muted">Create your first exam to see detailed analytics here.</p>
-                    <a href="{% url 'exam:create_exam' %}" class="btn btn-primary">
-                        <i class="fas fa-plus me-2"></i>Create Your First Exam
-                    </a>
-                </div>
-            {% endif %}
+            </div>
         </div>
     </div>
     
