@@ -54,6 +54,12 @@
                             <strong>Expired</strong> - This exam is no longer available. The deadline was {{ exam.end_date_time|date:"M d, Y H:i" }}.
                         </div>
                     
+                    {% elif exam_status == 'inactive' %}
+                        <div class="alert alert-warning" role="alert">
+                            <i class="fas fa-pause-circle me-2"></i>
+                            <strong>Exam Disabled</strong> - This exam has been temporarily disabled by the instructor.
+                        </div>
+
                     {% elif exam_status == 'no_access' %}
                         <div class="alert alert-warning" role="alert">
                             <i class="fas fa-lock me-2"></i>
