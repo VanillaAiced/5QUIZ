@@ -19,7 +19,7 @@ from .models import (
     ExamSubmission, StudentAnswer
 )
 
-User = get_user_model()
+User = CustomUser
 
 
 
