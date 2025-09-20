@@ -1,18 +1,5 @@
 from django.urls import path
-from .views import (
-    DashboardView, 
-    TeacherDashboardView, 
-    StudentDashboardView, 
-    ExamCreateView, 
-    QuestionManagementView,
-    ExamDetailView,
-    ExamUpdateView,
-    StudentExamView,
-    StartExamView,
-    TakeExamView,
-    ExamResultView,
-    debug_timezone_view
-)
+from .views import *
 
 app_name = 'exam'
 
