@@ -109,7 +109,8 @@ class TeacherProfileView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
             
             # Basic exam stats
             total_attempts = exam_submissions.count()
-            
+            allocated_time_minutes = exam.duration_minutes  # Initialize here for all code paths
+
             if total_attempts > 0:
                 # Pass/fail analysis
                 passed_count = exam_submissions.filter(
