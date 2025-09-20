@@ -111,6 +111,10 @@ class Exam(models.Model):
         """Get exam status specifically for a student."""
         now = timezone.now()
         
+        # Check if exam is active
+        if not self.is_active:
+            return 'inactive'
+
         # Check if exam window is open
         if now < self.start_date_time:
             return 'upcoming'

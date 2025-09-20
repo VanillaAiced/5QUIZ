@@ -129,7 +129,6 @@ class TeacherProfileView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
                     avg_time=Avg('time_taken')
                 )['avg_time']
                 
-                allocated_time_minutes = exam.duration_minutes
                 avg_time_minutes = 0
                 time_efficiency = 0
                 
@@ -214,6 +213,7 @@ class StudentProfileView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
         ).select_related('exam').order_by('-submitted_at')
         
         # Calculate average score
+        total_exams_taken = all_submissions.count()
         if total_exams_taken > 0:
             avg_score = all_submissions.aggregate(
                 avg=Avg('percentage')
@@ -236,21 +236,21 @@ class StudentProfileView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
                 'badge_class': submission.get_result_badge_class(),
             })
         
-        # Get grade distribution
-        grade_ranges = [
-            ('A (90-100%)', all_submissions.filter(percentage__gte=90).count()),
-            ('B (80-89%)', all_submissions.filter(percentage__gte=80, percentage__lt=90).count()),
-            ('C (70-79%)', all_submissions.filter(percentage__gte=70, percentage__lt=80).count()),
-            ('D (60-69%)', all_submissions.filter(percentage__gte=60, percentage__lt=70).count()),
-            ('F (0-59%)', all_submissions.filter(percentage__lt=60).count()),
-        ]
-        
+        # Get grade distribution - show only overall grade
+        if total_exams_taken > 0:
+            grade_ranges = [
+                ('Overall Grade', f'{avg_score:.1f}%')
+            ]
+        else:
+            grade_ranges = []
+
         context.update({
             'student': student,
             'avg_score': avg_score,
             'recent_submissions': recent_submissions,
             'exam_performance': exam_performance,
             'grade_ranges': grade_ranges,
+            'total_exams_taken': total_exams_taken,
         })
         
         return context

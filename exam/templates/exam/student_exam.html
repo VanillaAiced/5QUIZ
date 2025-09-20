@@ -59,7 +59,7 @@
                             <i class="fas fa-pause-circle me-2"></i>
                             <strong>Exam Disabled</strong> - This exam has been temporarily disabled by the instructor.
                         </div>
-
+                    
                     {% elif exam_status == 'no_access' %}
                         <div class="alert alert-warning" role="alert">
                             <i class="fas fa-lock me-2"></i>
@@ -70,6 +70,12 @@
                         <div class="alert alert-danger" role="alert">
                             <i class="fas fa-ban me-2"></i>
                             <strong>No More Attempts</strong> - You have used all {{ max_attempts }} attempts for this exam.
+                        </div>
+                    
+                    {% elif exam_status == 'time_up' %}
+                        <div class="alert alert-danger" role="alert">
+                            <i class="fas fa-clock me-2"></i>
+                            <strong>Time Expired</strong> - Your exam session has expired and was automatically submitted.
                         </div>
                     
                     {% elif exam_status == 'in_progress' %}

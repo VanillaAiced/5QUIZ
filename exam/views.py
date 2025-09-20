@@ -12,6 +12,7 @@ from django import forms
 from django.http import JsonResponse
 import random
 import json
+from accounts.models import CustomUser
 
 from exam.forms import ExamForm
 from .models import (
@@ -223,6 +224,7 @@ class ExamCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
     def test_func(self):
         return self.request.user.is_teacher
     def get_context_data(self, **kwargs):
+
         context = super().get_context_data(**kwargs)
         # Add student count information for better user experience
         total_students = User.objects.filter(user_type='student').count()
@@ -565,7 +567,7 @@ class StudentExamView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
         
         # Get exam status for this student - THIS WAS MISSING
         context['exam_status'] = exam.get_status_for_student(student)
-        
+
         # Get attempt information
         context['attempts_made'] = exam.get_student_attempts(student)
         context['remaining_attempts'] = exam.get_remaining_attempts(student)
@@ -799,7 +801,7 @@ class ExamResultView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
         submission = self.get_object()
         return (self.request.user.is_student and 
                 submission.student == self.request.user)
-    
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         submission = self.get_object()

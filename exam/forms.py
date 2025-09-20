@@ -1,5 +1,4 @@
 from django import forms
-from django.contrib.auth.models import User
 from django.utils import timezone
 from accounts.models import *
 
@@ -27,7 +26,7 @@ class ExamForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         # Only show students in the allowed_students field
-        self.fields['allowed_students'].queryset = User.objects.filter(user_type='student')
+        self.fields['allowed_students'].queryset = CustomUser.objects.filter(user_type='student')
         self.fields['allowed_students'].help_text = 'Hold Ctrl/Cmd to select multiple students'
         
         # Convert datetime fields to local timezone for display
@@ -48,7 +47,7 @@ class ExamForm(forms.ModelForm):
         
         # Validate that there are students available when access_type is 'all_students'
         if access_type == 'all_students':
-            total_students = User.objects.filter(user_type='student').count()
+            total_students = CustomUser.objects.filter(user_type='student').count()
             if total_students == 0:
                 raise forms.ValidationError(
                     'Cannot create exam for "All Students" because there are no students registered in the system. '
@@ -62,7 +61,7 @@ class ExamForm(forms.ModelForm):
                     'This exam has no participants. Please select at least one student or change access type to "All Students".'
                 )
         elif access_type == 'all_students':
-            total_students = User.objects.filter(user_type='student').count()
+            total_students = CustomUser.objects.filter(user_type='student').count()
             if total_students == 0:
                 raise forms.ValidationError(
                     'Cannot create exam because there are no students in the system. Please register students first.'
