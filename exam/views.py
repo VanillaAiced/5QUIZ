@@ -563,6 +563,9 @@ class StudentExamView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
         exam = self.get_object()
         student = self.request.user
         
+        # Get exam status for this student - THIS WAS MISSING
+        context['exam_status'] = exam.get_status_for_student(student)
+        
         # Get attempt information
         context['attempts_made'] = exam.get_student_attempts(student)
         context['remaining_attempts'] = exam.get_remaining_attempts(student)
