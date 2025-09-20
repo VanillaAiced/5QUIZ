@@ -29,6 +29,58 @@
         </div>
     </div>
 
+    <!-- Student Statistics Overview -->
+    <div class="row mb-4">
+        <div class="col-md-3 mb-3">
+            <div class="stat-card text-center">
+                <div class="stat-value">{{ recent_submissions|length }}</div>
+                <div class="stat-label">Total Exams Taken</div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="stat-card text-center">
+                <div class="stat-value">{{ avg_score|floatformat:1 }}%</div>
+                <div class="stat-label">Overall Average Score</div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="stat-card text-center">
+                {% with passed_count=0 %}
+                    {% for performance in exam_performance %}
+                        {% if performance.result_status == 'Pass' %}
+                            {% with passed_count=passed_count|add:1 %}{% endwith %}
+                        {% endif %}
+                    {% endfor %}
+                    <div class="stat-value">
+                        {% for performance in exam_performance %}
+                            {% if performance.result_status == 'Pass' %}{{ forloop.counter0|add:1 }}{% endif %}
+                        {% endfor %}
+                        {% if not exam_performance %}0{% endif %}
+                    </div>
+                {% endwith %}
+                <div class="stat-label">Exams Passed</div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="stat-card text-center">
+                <div class="stat-value">
+                    {% if exam_performance %}
+                        {% regroup exam_performance by result_status as grouped_results %}
+                        {% for group in grouped_results %}
+                            {% if group.grouper == 'Pass' %}
+                                {% widthratio group.list|length exam_performance|length 100 %}%
+                            {% endif %}
+                        {% endfor %}
+                        {% if not grouped_results %}0%{% endif %}
+                    {% else %}
+                        0%
+                    {% endif %}
+                </div>
+                <div class="stat-label">Pass Rate</div>
+            </div>
+        </div>
+    </div>
+
     <!-- Performance Overview -->
     <div class="row mb-4">
         <div class="col-lg-8">
